@@ -1368,3 +1368,65 @@ void() DropBackpack =
 	item.nextthink = time + 120;	// remove after 2 minutes
 	item.think = SUB_Remove;
 };
+
+
+void() QuadDropTouch =
+{
+
+	if (other.classname != "player")
+		return;
+	if (other.health <= 0)
+		return;
+
+	sprint (other, "You stole the ");
+	sprint (other, self.netname);
+	sprint (other,"\n");
+
+	if (deathmatch)
+	{
+		self.mdl = self.model;
+	}	
+
+	sound (other, CHAN_VOICE, self.noise, 1, ATTN_NORM);
+	stuffcmd (other, "bf\n");
+	self.solid = SOLID_NOT;
+	other.items = other.items | self.items;
+	self.model = string_null;
+
+
+	other.super_time = 1;
+	other.super_damage_finished = self.super_damage_finished;
+
+	activator = other;	
+	remove(self);
+	SUB_UseTargets();				// fire all targets / killtargets
+	self = other;
+};
+
+//drop a Q item into the world that exires AT expireTime (not that long in the future)
+// it will also vanish at that time
+void(float expireTime) DropQuad =
+{
+	local entity	item;
+
+	item = spawn();
+	item.origin = self.origin - '0 0 24';
+	
+	item.items = IT_QUAD;
+	item.netname = "Quad Damage";	
+
+	item.velocity_z = 300;
+	item.velocity_x = -100 + (random() * 200);
+	item.velocity_y = -100 + (random() * 200);
+	
+	item.flags = FL_ITEM;
+	item.solid = SOLID_TRIGGER;
+	item.super_damage_finished = expireTime;
+	item.movetype = MOVETYPE_TOSS;
+	setmodel (item, "progs/quaddama.mdl");
+	setsize (item, '-16 -16 -24', '16 16 32');
+	item.touch = QuadDropTouch;
+	item.noise = "items/damage.wav";
+	item.nextthink = expireTime;	// remove after quad time runs up
+	item.think = SUB_Remove;
+};

@@ -533,7 +533,11 @@ void() PlayerDie =
 	self.modelindex = modelindex_player;	// don't use eyes
 
 	if (deathmatch || coop)
+	{
 		DropBackpack();
+		if(self.super_damage_finished > time)
+			DropQuad(self.super_damage_finished);
+	}
 	
 	self.weaponmodel="";
 	self.view_ofs = '0 0 -8';
