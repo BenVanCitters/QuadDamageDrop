@@ -1,4 +1,4 @@
-../progs.dat
+./progs_folder/progs.dat
 
 defs.qc
 subs.qc
