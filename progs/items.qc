@@ -1419,6 +1419,7 @@ void(float expireTime) DropQuad =
 	item.velocity_x = -100 + (random() * 200);
 	item.velocity_y = -100 + (random() * 200);
 	
+	item.effects = item.effects | EF_DIMLIGHT;
 	item.flags = FL_ITEM;
 	item.solid = SOLID_TRIGGER;
 	item.super_damage_finished = expireTime;
